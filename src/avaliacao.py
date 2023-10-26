@@ -1,4 +1,5 @@
 import chess
+import random
 
 valorPecas = {
     chess.PAWN: 100,
@@ -183,6 +184,15 @@ def valorJogada(board, jog, final):
     
     return valor_atual
 
+def abertura(board):
+    if (board.fullmove_number<10):
+        if (board.turn == chess.WHITE):
+            return 1/30 * board.legal_moves.count()
+        else:
+            return -1/30 * board.legal_moves.count()
+    else:
+        return 0
+
 def avaliarTabuleiro(board):
     pont = 0
     final = verificarFinal(board)
@@ -194,7 +204,7 @@ def avaliarTabuleiro(board):
 
         else:
             peca = board.piece_at(sqr)
-            pont += valorPecas[peca.piece_type] + avaliarPeca(peca, sqr, final)
+            pont += valorPecas[peca.piece_type] + avaliarPeca(peca, sqr, final) + abertura(board) + 0.001 * random.random()
     
     return pont
 

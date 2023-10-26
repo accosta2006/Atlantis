@@ -1,8 +1,8 @@
 import chess
 from avaliacao import avaliarTabuleiro, valorJogada, verificarFinal
 
-PONT_MATE = 10000000000
-LIMI_MATE =  9990000000
+PONT_MATE = 1000
+LIMI_MATE =  999
 
 def proxJog(prof, board):
     jog = minimax_main(prof, board)
@@ -22,7 +22,9 @@ def ordenarJogadas(board):
 
 def minimax_main(prof, board: chess.Board()):
     maximizar = chess.WHITE
-    melhorJog = -float("inf")
+    if maximizar:
+        melhorJog = -float("inf")
+
     if not maximizar:
         melhorJog = float("inf")
     
@@ -33,7 +35,7 @@ def minimax_main(prof, board: chess.Board()):
         board.push(jog)
 
         if board.can_claim_draw():
-            valor = 0.0
+            valor = 0
         
         else:
             valor = minimax(prof - 1, board, -float("inf"), float("inf"), not maximizar)
