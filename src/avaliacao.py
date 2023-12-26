@@ -1,240 +1,108 @@
 import chess
 import random
 
-valorPecas = {
-    chess.PAWN: 100,
-    chess.ROOK: 500,
-    chess.KNIGHT: 320,
-    chess.BISHOP: 330,
-    chess.QUEEN: 900,
-    chess.KING: 20000
-}
+class Engine:
+    def __init__(self, tab, profmax, cor):
+        self.tab = tab
+        self.cor = cor
+        self.profmax = profmax
 
-avaliacaoPeaoBranco = [
-    0, 0, 0, 0, 0, 0, 0, 0,
-    5, 10, 10, 10, 10, 10, 10, 5,
-    5, -5, -10, -10, -10, -10, -5, 5,
-    0, 0, 0, 20, 20, 0, 0, 0,
-    5, 5, 10, 25, 25, 10, 5, 5,
-    10, 10, 20, 30, 30, 20, 10, 10,
-    50, 50, 50, 50, 50, 50, 50, 50,
-    0, 0, 0, 0, 0, 0, 0, 0
-]
-avaliacaoPeaoPreto = list(reversed(avaliacaoPeaoBranco))
+    def melhorJogada(self):
+        return self.minimax(None, 1)
 
-avaliacaoCavaloBranco = [
-    -50, -40, -30, -30, -30, -30, -40, -50,
-    -40, -20, 0, 0, 0, 0, -20, -40,
-    -30, 0, 10, 15, 15, 10, 0, -30,
-    -30, 5, 15, 20, 20, 15, 5, -30,
-    -30, 0, 15, 20, 20, 15, 0, -30,
-    -30, 5, 10, 10, 10, 10, 5, -30,
-    -40, -20, 0, 5, 5, 0, -20, -40,
-    -50, -40, -30, -30, -30, -30, -40, -50
-]
+    def valorPecas(self, quad):
+        valorPeca = 0
 
-avaliacaoCavaloPreto = list(reversed(avaliacaoCavaloBranco))
+        if self.tab.piece_type_at(quad) == chess.PAWN:
+            valorPeca = 1
+        
+        elif self.tab.piece_type_at(quad) == chess.KNIGHT:
+            valorPeca = 3.2
 
-avaliacaoBispoBranco = [
-    -20, -10, -10, -10, -10, -10, -10, -20,
-    -10, 5, 0, 0, 0, 0, 5, -10,
-    -10, 10, 10, 10, 10, 10, 10, -10,
-    -10, 0, 10, 10, 10, 10, 0, -10,
-    -10, 5, 5, 10, 10, 5, 5, -10,
-    -10, 0, 5, 10, 10, 5, 0, -10,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -20, -10, -10, -10, -10, -10, -10, -20
-]
-avaliacaoBispoPreto = list(reversed(avaliacaoBispoBranco))
-
-avaliacaoTorreBranca = [
-    0, 0, 0, 5, 5, 0, 0, 0,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    5, 10, 10, 10, 10, 10, 10, 5,
-    0, 0, 0, 0, 0, 0, 0, 0
-]
-avaliacaoTorrePreto = list(reversed(avaliacaoTorreBranca))
-
-avaliacaoDamaBranca = [
-    -20, -10, -10, -5, -5, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 5, 5, 5, 0, -10,
-    -5, 0, 5, 5, 5, 5, 0, -5,
-    0, 0, 5, 5, 5, 5, 0, -5,
-    -10, 5, 5, 5, 5, 5, 0, -10,
-    -10, 0, 5, 0, 0, 0, 0, -10,
-    -20, -10, -10, -5, -5, -10, -10, -20
-]
-
-avaliacaoDamaPreta = list(reversed(avaliacaoDamaBranca))
-
-avaliacaoReiBranco = [
-    20, 30, 10, 0, 0, 10, 30, 20,
-    20, 20, 0, 0, 0, 0, 20, 20,
-    -10, -20, -20, -20, -20, -20, -20, -10,
-    20, -30, -30, -40, -40, -30, -30, -20,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30
-]
-avaliacaoReiPreto = list(reversed(avaliacaoReiBranco))
-
-avaliacaoReiFinalBranco = [
-    50, -30, -30, -30, -30, -30, -30, -50,
-    -30, -30,  0,  0,  0,  0, -30, -30,
-    -30, -10, 20, 30, 30, 20, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 20, 30, 
-]
-
-avaliacaoReiFinalPreto = list(reversed(avaliacaoReiFinalBranco))
-
-def avaliarPeca(peca, sqr, final):
-    tipo_peca = peca.piece_type
-    mapeamento = []
-
-    if 0 <= sqr < len(mapeamento):
-        return mapeamento[sqr]
-    else:
-        return 0
-
-    if tipo_peca == chess.PAWN:
-        if peca.color == chess.WHITE:    
-            mapeamento = avaliacaoPeaoBranco
+        elif self.tab.piece_type_at(quad) == chess.BISHOP:
+            valorPeca = 3.33
+        
+        elif self.tab.piece_type_at(quad) == chess.ROOK:
+            valorPeca = 5.1
+        
+        elif self.tab.piece_type_at(quad) == chess.QUEEN:
+            valorPeca = 8.8
+        
+        if self.tab.color_at(quad) != self.cor:
+            return -valorPeca
         
         else:
-            mapeamento = avaliacaoPeaoPreto
-        
-    if tipo_peca == chess.KNIGHT:
-        if peca.color == chess.WHITE:
-            mapeamento == avaliacaoCavaloBranco
-        
-        else:
-            mapeamento == avaliacaoCavaloPreto
-    
-    if tipo_peca == chess.BISHOP:
-        if peca.color == chess.WHITE:
-            mapeamento == avaliacaoBispoBranco
-        
-        else:
-            mapeamento = avaliacaoBispoPreto
-    
-    if tipo_peca == chess.ROOK:
-        if peca.color == chess.WHITE:
-            mapeamento = avaliacaoTorreBranca
-        
-        else:
-            mapeamento = avaliacaoTorrePreto
-    
-    if tipo_peca == chess.QUEEN:
-        if peca.color == chess.WHITE:
-            mapeamento = avaliacaoDamaBranca
-        
-        else:
-            mapeamento = avaliacaoDamaPreta
-    
-    if tipo_peca == chess.KING and final == False:
-        if peca.color == chess.WHITE:
-            mapeamento = avaliacaoReiBranco
-        
-        else:
-            mapeamento = avaliacaoReiPreto
+            return valorPeca
 
-    if tipo_peca == chess.KING and final == True:
-        if peca.color == chess.WHITE:
-            mapeamento = avaliacaoReiFinalBranco
+    def avalTab(self):
+        valor = 0
+
+        for i in range(64):
+            valor += self.valorPecas(chess.SQUARES[i])
+        valor += self.mate() + self.abertura() + 0.001 * random.random()
+        
+        return valor
+    
+    def mate(self):
+        if self.tab.is_checkmate():
+            if self.tab.turn == chess.WHITE:
+                return -9999
+            else:
+                return 9999
+        else:
+            return 0
+    
+    def abertura(self):
+        if self.tab.fullmove_number <= 10:
+            if self.tab.turn == chess.WHITE:
+                return 1/30 * self.tab.legal_moves.count()
+            else:
+                return 1/30 * self.tab.legal_moves.count()
+        else:
+            return 0
+            
+    def minimax(self, cand, prof):
+        if ( prof == self.profmax or self.tab.legal_moves.count() == 0):
+            return self.avalTab()
         
         else:
-            mapeamento = avaliacaoReiFinalPreto
-    
-    return mapeamento[sqr]
+            jogadas = list(self.tab.legal_moves)
 
-def valorJogada(board, jog, final):
-    if jog.promotion is not None:
-        if board.turn == chess.BLACK:
-            return -float("inf")
-        
-        else:
-            float("inf")
+            novoCand = None
 
-    peca = board.piece_at(jog.from_square)
+            if(prof % 2 != 0):
+                novoCand = float("-inf")
+            else:
+                novoCand = float("inf")
+            
+            for i in jogadas:
 
-    if peca:
-        de = avaliarPeca(peca, jog.from_square, final)
-        para = avaliarPeca(peca, jog.to_square, final)
-        valor_pos = para - de
-    
-    else:
-        raise Exception(f"É necessário uma peça em {jog.from_square}")
-    
-    valor_captura = 0
-    if board.is_capture(jog):
-        valor_captura = avaliacaoCaptura(board, jog)
-    
-    valor_atual = valor_captura + valor_pos
+                self.tab.push(i)
+                valor = self.minimax(novoCand, prof + 1) 
 
-    if board.turn == chess.BLACK:
-        valor_atual = -valor_atual
-    
-    return valor_atual
+                if(valor > novoCand and prof % 2 != 0):
+                    if (prof == 1):
+                        jog=i
+                    novoCand = valor
 
-def abertura(board):
-    if (board.fullmove_number<10):
-        if (board.turn == chess.WHITE):
-            return 1/30 * board.legal_moves.count()
-        else:
-            return -1/30 * board.legal_moves.count()
-    else:
-        return 0
+                elif(valor < novoCand and prof % 2 == 0):
+                    novoCand = valor
 
-def avaliarTabuleiro(board):
-    pont = 0
-    final = verificarFinal(board)
+                if (cand != None
+                 and valor < cand
+                 and prof % 2 == 0):
+                    self.tab.pop()
+                    break
 
-    for sqr in chess.SQUARES:
-        peca = board.piece_at(sqr)
-        if not peca:
-            continue
+                elif (cand != None 
+                and valor > cand 
+                and prof % 2 != 0):
+                    self.tab.pop()
+                    break
 
-        else:
-            peca = board.piece_at(sqr)
-            pont += valorPecas[peca.piece_type] + avaliarPeca(peca, sqr, final) + abertura(board) + 0.001 * random.random()
-    
-    return pont
+                self.tab.pop()
 
-def verificarFinal(board):
-    damas = 0
-    cavBis = 0
-
-    for sqr in chess.SQUARES:
-        peca = board.piece_at(sqr)
-        if peca and peca.piece_type == chess.QUEEN:
-            damas += 1
-        
-        if peca and (peca.piece_type == chess.BISHOP or peca.piece_type == chess.KNIGHT):
-            cavBis += 1
-
-    if damas == 0 or (damas == 2 and cavBis <= 1):
-        return True
-
-    return False
-
-def avaliacaoCaptura(board, jog):
-
-    if board.is_en_passant(jog):
-        return valorPecas[chess.PAWN]
-    
-    para = board.piece_at(jog.to_square)
-    de = board.piece_at(jog.from_square)
-
-    if para is None or de is None:
-        raise Exception(f"São necessárias peças nos quadrados {jog.to_square} e {jog.from_square}")
-    
-    return valorPecas[para.piece_type] - valorPecas[de.piece_type]
-
+            if (prof>1):
+                return novoCand
+            else:
+                return jog

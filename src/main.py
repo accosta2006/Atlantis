@@ -1,24 +1,44 @@
-import chess
-import gerador
+import avaliacao as av
+import chess as ch
 
-cor = input("Escolha a sua cor (b/p):\n")
-prof = int(input("Escolha a profundidade:\n"))
-game = chess.Board()
+class Main:
 
-def jogadaEngine(board, prof):
-    jogada_cpu = gerador.proxJog(prof, board)
-    board.push(jogada_cpu)
-    print("O engine jogou: " + str(jogada_cpu))
+    def __init__(self, board=ch.Board):
+        self.board=board
 
-def jogadaJogador(board):
-    jogada = input("A tua jogada (ex.: e4, Nf3)")
-    board.push_san(jogada)
+    #play human move
+    def jogHumana(self):
+        try:
+            jog = input("Insira uma jogada: ")
+            self.board.push_san(jog)
+        except:
+            self.jogHumana()
 
-while not game.is_checkmate():
-    if cor == 'p':
-        jogadaEngine(game, prof)
-        jogadaJogador(game)
-    
-    if cor == 'b':
-        jogadaJogador(game)
-        jogadaEngine(game, prof)
+    def jogEngine(self, profmax, cor):
+        engine = av.Engine(self.board, profmax, cor)
+        jogadaEngine = engine.melhorJogada()
+        self.board.push(jogadaEngine)
+        print("Jogada do engine: ", jogadaEngine, "\n")
+
+    def startGame(self):
+        cor=None
+        while(cor!="b" and cor!="p"):
+            cor = input("Escolhe a tua cor (b/p):\n")
+        profmax=None
+        while(isinstance(profmax, int)==False):
+            profmax = int(input("Escolhe a profundidade:\n"))
+        if cor=="p":
+            while (self.board.is_checkmate()==False):
+                self.jogEngine(profmax, ch.WHITE)
+                self.jogHumana()   
+        elif cor=="b":
+            while (self.board.is_checkmate()==False):
+                self.jogHumana()
+                self.jogEngine(profmax, ch.BLACK)
+                print()
+        self.board.reset
+        self.startGame()
+
+novoTab= ch.Board()
+game = Main(novoTab)
+jogo = game.startGame()
