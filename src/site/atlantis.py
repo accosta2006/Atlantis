@@ -7,6 +7,100 @@ class Engine:
         self.cor = cor
         self.profmax = profmax
 
+    valorPeaoBranco = [
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        0.05, 0.1, 0.1, -0.2, -0.2, 0.1, 0.1, 0.05,
+        0.05, -0.05, -0.1, 0.0, 0.0, -0.1, -0.05, 0.05,
+        0.0, 0.0, 0.0, 0.6, 0.6, 0.0, 0.0, 0.0,
+        0.05, 0.05, 0.1, 0.65, 0.65, 0.1, 0.05, 0.05,
+        0.1, 0.1, 0.2, 0.3, 0.3, 0.2, 0.1, 0.1,
+        0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    ]
+
+    valorPeaoPreto = list(reversed(valorPeaoBranco))
+
+    valorCavaloBranco = [
+        -0.5, -0.4, -0.3, -0.3, -0.3, -0.3, -0.4, -0.5,
+        -0.4, -0.2, 0.0, 0.0, 0.0, 0.0, -0.2, -0.4,
+        -0.3, 0.0, 0.1, 0.15, 0.15, 0.1, 0.0, -0.3,
+        -0.3, 0.05, 0.15, 0.2, 0.2, 0.15, 0.05, -0.3,
+        -0.3, 0.0, 0.15, 0.2, 0.2, 0.15, 0.0, -0.3,
+        -0.3, 0.05, 0.1, 0.15, 0.15, 0.1, 0.05, -0.3,
+        -0.4, -0.2, 0.0, 0.05, 0.05, 0.0, -0.2, -0.4,
+        -0.5, -0.4, -0.3, -0.3, -0.3, -0.3, -0.4, -0.5
+    ]
+
+    valorCavaloPreto = list(reversed(valorCavaloBranco))
+
+    valorBispoBranco = [
+        -0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2,
+        -0.1, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, -0.1,
+        -0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.1,
+        -0.1, 0.0, 0.1, 0.1, 0.1, 0.1, 0.0, -0.1,
+        -0.1, 0.05, 0.05, 0.1, 0.1, 0.05, 0.05, -0.1,
+        -0.1, 0.0, 0.05, 0.1, 0.1, 0.05, 0.0, -0.1,
+        -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1,
+        -0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2
+    ]
+
+    valorBispoPreto = list(reversed(valorBispoBranco))
+
+    valorTorreBranca = [
+        0.0, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0,
+        -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05,
+        -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05,
+        -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05,
+        -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05,
+        -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05,
+        0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    ]
+
+    valorTorrePreta = list(reversed(valorTorreBranca))
+
+    valorDamaBranca = [
+        -0.2, -0.1, -0.1, -0.05, -0.05, -0.1, -0.1, -0.2,
+        -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1,
+        -0.1, 0.0, 0.05, 0.05, 0.05, 0.05, 0.0, -0.1,
+        -0.05, 0.0, 0.05, 0.05, 0.05, 0.05, 0.0, -0.05,
+        0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.0, -0.05,
+        -0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.0, -0.1,
+        -0.1, 0.0, 0.05, 0.0, 0.0, 0.0, 0.0, -0.1,
+        -0.2, -0.1, -0.1, -0.05, -0.05, -0.1, -0.1, -0.2
+    ]
+
+    valorReiBranco = [
+        0.02, 0.03, 0.01, 0.0, 0.0, 0.1, 0.3, 0.2,
+        0.2, 0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2,
+        -0.1, -0.2, -0.2, -0.2, -0.2, -0.2, -0.2, -0.1,
+        0.2, -0.3, -0.3, -0.4, -0.4, -0.3, -0.3, -0.2,
+        -0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3,
+        -0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3,
+        -0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3,
+        -0.3, -0.4, -0.4, -0.5, -0.5, -0.4, -0.4, -0.3
+    ]
+    valorReiPreto = list(reversed(valorReiBranco))
+
+    valorDamaPreta = list(reversed(valorDamaBranca))
+
+    def ordenarJogadas(self):
+        def ordenador(jog):
+            self.tab.push(jog)
+            valor = self.avalTab()
+            self.tab.pop()
+            return valor
+        
+        in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
+
+        if self.tab.fullmove_number < 5:
+            filter = in_order[-3:]
+        
+        else:
+            filter = in_order[-5:]
+
+        return list(filter)
+
     def melhorJogada(self):
         return self.minimax(None, 1)
 
@@ -34,12 +128,55 @@ class Engine:
         else:
             return valorPeca
 
+    def mapeamento(self):
+        valor = 0
+        
+        for i in chess.SQUARES:
+            if self.cor == chess.WHITE:    
+                if self.tab.piece_type_at(i) == chess.PAWN:
+                    valor += self.valorPeaoBranco[i]
+                elif self.tab.piece_type_at(i) == chess.KNIGHT:
+                    valor += self.valorCavaloBranco[i]
+                elif self.tab.piece_type_at(i) == chess.BISHOP:
+                    valor += self.valorBispoBranco[i]
+                elif self.tab.piece_type_at(i) == chess.ROOK:
+                    valor += self.valorTorreBranca[i]
+                elif self.tab.piece_type_at(i) == chess.QUEEN:
+                    valor += self.valorDamaBranca[i]
+                elif self.tab.piece_type_at(i) == chess.KING:
+                    valor += self.valorReiBranco[i]
+            
+            else:
+                if self.tab.piece_type_at(i) == chess.PAWN:
+                    valor += self.valorPeaoPreto[i]
+                elif self.tab.piece_type_at(i) == chess.KNIGHT:
+                    valor += self.valorCavaloPreto[i]
+                elif self.tab.piece_type_at(i) == chess.BISHOP:
+                    valor += self.valorBispoPreto[i]
+                elif self.tab.piece_type_at(i) == chess.ROOK:
+                    valor += self.valorTorrePreta[i]
+                elif self.tab.piece_type_at(i) == chess.QUEEN:
+                    valor += self.valorDamaPreta[i]
+                elif self.tab.piece_type_at(i) == chess.KING:
+                    valor += self.valorReiPreto[i]
+
+        return valor
+    
+    def abertura(self):
+        if self.tab.fullmove_number <= 10:
+            if self.tab.turn == chess.WHITE:
+                return 1/30 * self.tab.legal_moves.count()
+            else:
+                return 1/30 * self.tab.legal_moves.count()
+        else:
+            return 0
+
     def avalTab(self):
         valor = 0
 
         for i in range(64):
             valor += self.valorPecas(chess.SQUARES[i])
-        valor += self.mate() + self.abertura() + 0.001 * random.random()
+        valor += self.mate() + self.abertura() + self.mapeamento() + 0.01 * random.random()
         
         return valor
     
@@ -51,22 +188,13 @@ class Engine:
                 return 9999
         else:
             return 0
-    
-    def abertura(self):
-        if self.tab.fullmove_number <= 10:
-            if self.tab.turn == chess.WHITE:
-                return 1/30 * self.tab.legal_moves.count()
-            else:
-                return 1/30 * self.tab.legal_moves.count()
-        else:
-            return 0
             
     def minimax(self, cand, prof):
         if ( prof == self.profmax or self.tab.legal_moves.count() == 0):
             return self.avalTab()
         
         else:
-            jogadas = list(self.tab.legal_moves)
+            jogadas = self.ordenarJogadas()
 
             novoCand = None
 

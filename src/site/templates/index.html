@@ -59,7 +59,7 @@
 
       $.post('/make_move', {'fen': game.fen()}, function(data){
         game.load(data.fen);
-        board.position(game.fen);
+        board.position(data.fen);
       });
     }
 
