@@ -96,10 +96,10 @@ class Engine:
         elif self.cor == chess.BLACK:
             in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
 
-        if self.tab.fullmove_number < 5:
+        if self.tab.fullmove_number < 10:
             filter = in_order[-3:]
         else:
-            filter = in_order[-4:]
+            filter = in_order[-6:]
 
         return list(filter)
 
@@ -185,9 +185,9 @@ class Engine:
     def mate(self):
         if self.tab.is_checkmate():
             if self.tab.turn == chess.WHITE:
-                return -9999
-            else:
                 return 9999
+            else:
+                return -9999
         else:
             return 0
             

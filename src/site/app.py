@@ -15,7 +15,7 @@ async def make_move():
     fen = request.form.get('fen')
     board = chess.Board(fen)
 
-    result = atlantis.generateMove(fen, 8, chess.BLACK)
+    result = atlantis.generateMove(fen, 6, chess.BLACK)
     board.push(result)
 
     fen = board.fen()
