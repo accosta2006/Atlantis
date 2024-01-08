@@ -89,15 +89,17 @@ class Engine:
             self.tab.push(jog)
             valor = self.avalTab()
             self.tab.pop()
-            return valor
-        
-        in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
+            return valor  
+	    
+        if self.cor == chess.WHITE:
+            in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.BLACK)
+        elif self.cor == chess.BLACK:
+            in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
 
         if self.tab.fullmove_number < 5:
             filter = in_order[-3:]
-        
         else:
-            filter = in_order[-5:]
+            filter = in_order[-4:]
 
         return list(filter)
 

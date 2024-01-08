@@ -15,7 +15,7 @@ async def make_move():
     fen = request.form.get('fen')
     board = chess.Board(fen)
 
-    result = atlantis.generateMove(fen, 7, chess.BLACK)
+    result = atlantis.generateMove(fen, 8, chess.BLACK)
     board.push(result)
 
     fen = board.fen()
@@ -23,4 +23,4 @@ async def make_move():
     return {'fen': fen}
 
 if __name__ == '__main__':
-    app.run(port=5000, threaded=True)
+    app.run(port=5000,host="0.0.0.0", threaded=True)
