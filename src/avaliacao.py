@@ -89,19 +89,17 @@ class Engine:
             self.tab.push(jog)
             valor = self.avalTab()
             self.tab.pop()
-            return valor
-        
-	if self.cor == chess.WHITE:
-       		in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.BLACK)
+            return valor  
+	    
+        if self.cor == chess.WHITE:
+            in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.BLACK)
+        elif self.cor == chess.BLACK:
+            in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
 
-	else:
-		in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
-
-        if self.tab.fullmove_number < 5:
-            filter = in_order[-3:]
-        
-        else:
+        if self.tab.fullmove_number < 6:
             filter = in_order[-4:]
+        else:
+            filter = in_order[-6:]
 
         return list(filter)
 
@@ -169,12 +167,15 @@ class Engine:
     def abertura(self):
         if self.tab.fullmove_number <= 10:
             if self.tab.turn == chess.WHITE:
-                return 1/30 * self.tab.legal_moves.count()
+                ab = 1/30 * self.tab.legal_moves.count()
             else:
-                return 1/30 * self.tab.legal_moves.count()
+                ab = 1/30 * self.tab.legal_moves.count()
         else:
-            return 0
-
+            ab = 0
+	
+    
+        return ab
+    
     def avalTab(self):
         valor = 0
 
@@ -243,5 +244,5 @@ def generateMove(fen, profmax, cor):
     tab = chess.Board(fen)
     engine = Engine(tab, profmax, cor)
     jog = engine.melhorJogada()
-
+    print(engine.abertura())
     return jog
