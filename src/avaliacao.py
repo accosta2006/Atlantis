@@ -98,8 +98,10 @@ class Engine:
 
         if self.tab.fullmove_number < 6:
             filter = in_order[-4:]
+            self.profmax = 5
         else:
-            filter = in_order[-6:]
+            filter = in_order[-8:]
+            self.profmax = self.profmax
 
         return list(filter)
 
@@ -193,53 +195,62 @@ class Engine:
                 return 9999
         else:
             return 0
-            
-    def minimax(self, cand, prof):
-        if ( prof == self.profmax or self.tab.legal_moves.count() == 0):
+           
+    def minimax(self, cand, prof, alpha=float("-inf"), beta=float("inf")):
+        if (prof == self.profmax or self.tab.legal_moves.count() == 0):
             return self.avalTab()
-        
+    
         else:
             jogadas = self.ordenarJogadas()
-
+    
             novoCand = None
-
-            if(prof % 2 != 0):
+    
+            if prof % 2 != 0:
                 novoCand = float("-inf")
+                for i in jogadas:
+                    self.tab.push(i)
+                    valor = self.minimax(novoCand, prof + 1, alpha, beta)
+    
+                    if valor > novoCand:
+                        if prof == 1:
+                            jog = i
+                        novoCand = valor
+    
+                    alpha = max(alpha, novoCand)
+    
+                    if beta <= alpha:
+                        self.tab.pop()
+                        break
+                    
+                    self.tab.pop()
+    
+                if prof > 1:
+                    return novoCand
+                else:
+                    return jog
+    
             else:
                 novoCand = float("inf")
+                for i in jogadas:
+                    self.tab.push(i)
+                    valor = self.minimax(novoCand, prof + 1, alpha, beta)
+    
+                    if valor < novoCand:
+                        novoCand = valor
+    
+                    beta = min(beta, novoCand)
+    
+                    if beta <= alpha:
+                        self.tab.pop()
+                        break
+                    
+                    self.tab.pop()
+    
+                if prof > 1:
+                    return novoCand
+                else:
+                    return jog
             
-            for i in jogadas:
-
-                self.tab.push(i)
-                valor = self.minimax(novoCand, prof + 1) 
-
-                if(valor > novoCand and prof % 2 != 0):
-                    if (prof == 1):
-                        jog=i
-                    novoCand = valor
-
-                elif(valor < novoCand and prof % 2 == 0):
-                    novoCand = valor
-
-                if (cand != None
-                 and valor < cand
-                 and prof % 2 == 0):
-                    self.tab.pop()
-                    break
-
-                elif (cand != None 
-                and valor > cand 
-                and prof % 2 != 0):
-                    self.tab.pop()
-                    break
-
-                self.tab.pop()
-
-            if (prof>1):
-                return novoCand
-            else:
-                return jog
-
 def generateMove(fen, profmax, cor):
     tab = chess.Board(fen)
     engine = Engine(tab, profmax, cor)
