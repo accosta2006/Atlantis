@@ -97,11 +97,9 @@ class Engine:
             in_order = sorted(self.tab.legal_moves, key=ordenador, reverse=self.tab.turn==chess.WHITE)
 
         if self.tab.fullmove_number < 6:
-            filter = in_order[-4:]
-            self.profmax = 5
+            filter = in_order[-7:]
         else:
-            filter = in_order[-8:]
-            self.profmax = self.profmax
+            filter = in_order[-10:]
 
         return list(filter)
 
@@ -126,7 +124,7 @@ class Engine:
         elif self.tab.piece_type_at(quad) == chess.QUEEN:
             valorPeca = 8.8
         
-        if self.tab.color_at(quad) != self.cor:
+        if self.tab.color_at(quad) != chess.WHITE:
             return -valorPeca
         
         else:
@@ -190,9 +188,9 @@ class Engine:
     def mate(self):
         if self.tab.is_checkmate():
             if self.tab.turn == chess.WHITE:
-                return -9999
-            else:
                 return 9999
+            else:
+                return -9999
         else:
             return 0
            
